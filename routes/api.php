@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/login', [AuthorController::class, 'login']);
 Route::post('/registration', [AuthorController::class, 'register']);
-// Route::post('/authors', [AuthorController::class, 'index']);
+Route::get('/authors', [AuthorController::class, 'index']);
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::post('/category', [CategoryController::class, 'store']);
+Route::post('/categories', [CategoryController::class, 'storeMany']);
+
+
+
+
+
 
 
 
