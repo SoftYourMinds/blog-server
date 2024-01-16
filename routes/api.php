@@ -19,8 +19,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('authors', AuthorController::class);
-    
+
+Route::get('/login', [AuthorController::class, 'login']);
+Route::post('/registration', [AuthorController::class, 'register']);
+// Route::post('/authors', [AuthorController::class, 'index']);
+
+
+
 // Route::resource('posts', 'PostController');
 
 

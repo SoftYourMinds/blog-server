@@ -18,7 +18,7 @@ class AuthorController extends Controller
         return response()->json($author);
     }
 
-    public function store(Request $request)
+    public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -35,26 +35,40 @@ class AuthorController extends Controller
         return response()->json($author, 201);
     }
 
-    public function updaзрte(Request $request, Author $author)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:authors,email,' . $author->id,
-            'password' => 'nullable|string|min:6',
-        ]);
+        public function update(Request $request, Author $author)
+        {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:authors,email,' . $author->id,
+                'password' => 'nullable|string|min:6',
+            ]);
 
-        $author->update([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => $request->has('password') ? bcrypt($request->input('password')) : $author->password,
-        ]);
+            $author->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => $request->has('password') ? bcrypt($request->input('password')) : $author->password,
+            ]);
 
-        return response()->json($author);
-    }
+            return response()->json($author);
+        }
 
     public function destroy(Author $author)
     {
         $author->delete();
         return response()->json(['message' => 'Author deleted successfully']);
+    }
+
+    public function login(Request $request)
+    {
+        // $credentials = $request->only('email', 'password');
+
+        $author = Author::where('email',$request->input('email'))->first();    
+
+        
+        if(password_verify($request->input('password'), $author->password)) {
+            return response()->json($author, 200);
+        }
+        
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 }
