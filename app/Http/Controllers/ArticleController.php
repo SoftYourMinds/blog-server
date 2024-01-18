@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Article;
-
-
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -32,6 +31,7 @@ class ArticleController extends Controller
             'tags' => 'array', // Перевірка, що теги є масивом
         ]);
     
+        // return $request->input('tags');
         $articleData = $request->all();
     
         if ($request->hasFile('image')) {
@@ -41,12 +41,20 @@ class ArticleController extends Controller
     
         $article = Article::create($articleData);
     
-        // Отримання масиву ідентифікаторів тегів із запиту
-        $tagIds = $request->input('tags');
-    
-        // Збереження тегів до статті (створюємо нові теги, якщо вони не існують)
-        $article->tags()->syncWithoutDetaching($tagIds);
-    
+     // Додаємо теги до статті
+
+            $tags = $request->input('tags');
+
+            foreach ($tags as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+            }
+            
+            $article->tags = $tags;
+            $article->save();
+            //=========
+
+        
+
         return response()->json($article, 201);
     }
     
@@ -75,10 +83,14 @@ class ArticleController extends Controller
         }
     
         // Отримання масиву ідентифікаторів тегів із запиту
-        $tagIds = $request->input('tags');
-    
-        // Збереження тегів до статті (створюємо нові теги, якщо вони не існують)
-        $article->tags()->syncWithoutDetaching($tagIds);
+        $tags = $request->input('tags');
+
+            foreach ($tags as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => $tagName]);
+            }
+            
+            $article->tags = $tags;
+            $article->save();
     
         $article->update($articleData);
     

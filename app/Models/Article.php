@@ -9,6 +9,11 @@ class Article extends Model
 {
     protected $fillable = ['title', 'content', 'author_id', 'category_id', 'image_path'];
 
+    protected $casts = [
+        'tags' => 'json',
+    ];
+    
+
     public function author()
     {
         return $this->belongsTo(Author::class);
