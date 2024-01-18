@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/login', [AuthorController::class, 'login']);
-Route::post('/registration', [AuthorController::class, 'register']);
+Route::post('/registration', [AuthorController::class, 'store']);
 Route::get('/authors', [AuthorController::class, 'index']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
@@ -47,7 +48,22 @@ Route::prefix('articles')->group(function () {
     Route::delete('/{article}', [ArticleController::class, 'destroy']);
 });
 
+Route::prefix('comments')->group(function () {
+    // Отримати всі коментарі
+    Route::get('/', [CommentController::class, 'index']);
 
+    // Отримати конкретний коментар за ID
+    Route::get('/{comment}', [CommentController::class, 'show']);
+
+    // Створити новий коментар
+    Route::post('/', [CommentController::class, 'store']);
+
+    // Оновити існуючий коментар
+    Route::put('/{comment}', [CommentController::class, 'update']);
+
+    // Видалити коментар
+    Route::delete('/{comment}', [CommentController::class, 'destroy']);
+});
 
 
 

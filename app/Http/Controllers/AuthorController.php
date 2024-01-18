@@ -18,7 +18,7 @@ class AuthorController extends Controller
         return response()->json($author);
     }
 
-    public function register(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -31,7 +31,7 @@ class AuthorController extends Controller
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
         ]);
-
+        
         return response()->json($author, 201);
     }
 

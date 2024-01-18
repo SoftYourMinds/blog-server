@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Article extends Model
 {
     protected $fillable = ['title', 'content', 'author_id', 'category_id', 'image_path'];
-
+    
     protected $casts = [
         'tags' => 'json',
     ];

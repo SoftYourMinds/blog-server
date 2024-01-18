@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('article_id');
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('name');
             $table->text('content');
             $table->timestamps();
     
             $table->foreign('article_id')->references('id')->on('articles');
+            $table->foreign('parent_id')->references('id')->on('comments');
         });
     }
 
