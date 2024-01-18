@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\Article;
+use App\Models\Category;
 use App\Models\Tag;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,7 +19,7 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-   if ($article->exists) {
+        if ($article->exists) {
             return response()->json($article);
         } else {
             return response()->json(['error' => 'Article not found.'], 404);
@@ -113,7 +115,48 @@ class ArticleController extends Controller
         return response()->json(['message' => 'Article deleted successfully']);
     }
 
+    public function getArticlesByCategory($category_id)
+    {
+        try {
+            // Валідація існування категорії
+            Category::findOrFail($category_id);
 
+            // Отримання статей за заданою категорією
+            $articles = Article::where('category_id', $category_id)->get();
+
+            return response()->json($articles);
+        } catch (ModelNotFoundException $e) {
+            // Повернення 404 помилки, якщо категорія не знайдена
+            return response()->json(['error' => 'Not Found'], 404);
+        }
+    }
+
+    public function findByNameAndTags(Request $request)
+    {
+        $name = $request->input('name');
+        $tags = $request->input('tags');
+    
+        $query = Article::query();
+    
+        // Пошук за ім'ям
+        if ($name) {
+            $query->where('title', 'like', '%' . $name . '%');
+        }
+    
+        // Пошук за тегами
+        if ($tags) {
+            $query->where(function ($q) use ($tags) {
+                foreach ($tags as $tag) {
+                    $q->orWhereJsonContains('tags', $tag);
+                }
+            });
+        }
+    
+        $articles = $query->get();
+    
+        return response()->json($articles);
+    }
+    
     
 
 
