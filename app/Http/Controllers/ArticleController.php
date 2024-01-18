@@ -17,7 +17,11 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
-        return response()->json($article);
+   if ($article->exists) {
+            return response()->json($article);
+        } else {
+            return response()->json(['error' => 'Article not found.'], 404);
+        }
     }
 
     public function store(Request $request)
@@ -53,9 +57,7 @@ class ArticleController extends Controller
             $article->save();
             //=========
 
-        
-
-        return response()->json($article, 201);
+            return response()->json($article, 201);
     }
     
     public function update(Request $request, Article $article)
@@ -112,7 +114,7 @@ class ArticleController extends Controller
     }
 
 
-
+    
 
 
 }
