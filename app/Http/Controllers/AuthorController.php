@@ -62,13 +62,15 @@ class AuthorController extends Controller
     {
         // $credentials = $request->only('email', 'password');
 
-        $author = Author::where('email',$request->input('email'))->first();    
 
+        $author = Author::where('email', $request->input('email'))->first();    
         
-        if(password_verify($request->input('password'), $author->password)) {
-            return response()->json($author, 200);
-        }
-        
+        if($author) {
+            if(password_verify($request->input('password'), $author->password)) {
+                return response()->json($author, 200);
+            }
+        }        
+
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 }

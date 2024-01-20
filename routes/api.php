@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/login', [AuthorController::class, 'login']);
+Route::post('/login', [AuthorController::class, 'login']);
 Route::post('/registration', [AuthorController::class, 'store']);
 Route::get('/authors', [AuthorController::class, 'index']);
 
@@ -33,7 +33,8 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::post('/category', [CategoryController::class, 'store']);
 Route::post('/categories', [CategoryController::class, 'storeMany']);
 Route::get('articles/by-category/{category}', [ArticleController::class, 'getArticlesByCategory']);
-Route::get('articles/by-name-tags', [ArticleController::class, 'findByNameAndTags']);
+Route::post('articles/by-name-tags', [ArticleController::class, 'findByNameAndTags']);
+Route::get('articles/by-author/{author}', [ArticleController::class, 'getArticlesByAuthorId']);
 
 
 Route::prefix('articles')->group(function () {
@@ -47,7 +48,7 @@ Route::prefix('articles')->group(function () {
     Route::post('/', [ArticleController::class, 'store']);
 
     // Оновлення інформації про статтю
-    Route::put('/{article}', [ArticleController::class, 'update']);
+    Route::put('/update', [ArticleController::class, 'update']);
 
     // Видалення статті
     Route::delete('/{article}', [ArticleController::class, 'destroy']);
