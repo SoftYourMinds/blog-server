@@ -20,6 +20,7 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         if ($article->exists) {
+            $article = $article->load('author', 'category');
             return response()->json($article);
         } else {
             return response()->json(['error' => 'Article not found.'], 404);
@@ -150,7 +151,7 @@ class ArticleController extends Controller
             });
         }
     
-        $articles = $query->get();
+        $articles = $query->with('author', 'category')->get();
     
         return response()->json($articles);
     }
